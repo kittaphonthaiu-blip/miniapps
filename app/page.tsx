@@ -1,15 +1,14 @@
-import Image from "next/image";
 import Link from "next/link";
-import { ShoppingBag, Heart, Search, Menu } from "lucide-react"; // แนะนำติดตั้ง lucide-react สำหรับไอคอน
+import { ShoppingBag, Heart, Search, Menu } from "lucide-react";
 
-// ข้อมูลจำลองสินค้า (Mock Data)
+// ข้อมูลจำลองสินค้าพร้อมรูป SVG Placeholder เพื่อให้รันได้ทันที ไม่ติด Domain Error
 const PRODUCTS = [
   {
     id: "1",
     name: "Minimalist Oversized Tee",
     category: "T-Shirts",
     price: 590,
-    image: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500&q=80",
+    image: "https://placehold.co/400x533/e2e8f0/1e293b?text=Oversized+Tee",
     isNew: true,
   },
   {
@@ -17,7 +16,7 @@ const PRODUCTS = [
     name: "Classic Denim Jacket",
     category: "Outerwear",
     price: 1890,
-    image: "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=500&q=80",
+    image: "https://placehold.co/400x533/e2e8f0/1e293b?text=Denim+Jacket",
     isNew: false,
   },
   {
@@ -25,7 +24,7 @@ const PRODUCTS = [
     name: "Relaxed Fit Cargo Pants",
     category: "Pants",
     price: 1290,
-    image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=500&q=80",
+    image: "https://placehold.co/400x533/e2e8f0/1e293b?text=Cargo+Pants",
     isNew: true,
   },
   {
@@ -33,7 +32,7 @@ const PRODUCTS = [
     name: "Linen Blend Summer Shirt",
     category: "Shirts",
     price: 890,
-    image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=500&q=80",
+    image: "https://placehold.co/400x533/e2e8f0/1e293b?text=Summer+Shirt",
     isNew: false,
   },
 ];
@@ -42,10 +41,9 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-neutral-50 text-neutral-900 dark:bg-neutral-950 dark:text-neutral-50">
       
-      {/* 1. Navbar Navigation */}
+      {/* 1. Header Navigation Bar */}
       <header className="sticky top-0 z-50 border-b border-neutral-200 bg-white/80 backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-950/80">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          
           <div className="flex items-center gap-4">
             <button className="sm:hidden p-1 text-neutral-600 hover:text-black dark:text-neutral-300">
               <Menu size={24} />
@@ -82,8 +80,8 @@ export default function Home() {
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* 2. Hero Section */}
-        <section className="relative my-6 overflow-hidden rounded-2xl bg-neutral-900 text-white">
-          <div className="relative z-10 flex flex-col items-start justify-center px-8 py-20 sm:px-16 lg:w-1/2 lg:py-32">
+        <section className="relative my-6 overflow-hidden rounded-2xl bg-neutral-900 text-white min-h-[360px] flex items-center">
+          <div className="relative z-10 flex flex-col items-start justify-center px-8 py-12 sm:px-16 lg:w-1/2">
             <span className="mb-2 text-xs font-semibold uppercase tracking-widest text-neutral-400">
               Summer Collection 2026
             </span>
@@ -91,32 +89,22 @@ export default function Home() {
               URBAN <br /> ESSENTIALS.
             </h1>
             <p className="mt-4 text-base text-neutral-300">
-              เสื้อผ้าเรียบง่าย ทรงสวมสบาย ตอบโจทย์ทุกลุคในชีวิตประจำวัน พร้อมส่วนลดสูงสุด 30%
+              เสื้อผ้าเรียบง่าย ทรงสวมสบาย ตอบโจทย์ทุกลุคในชีวิตประจำวัน
             </p>
             <Link
               href="#products"
-              className="mt-8 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-neutral-900 transition-all hover:bg-neutral-200"
+              className="mt-6 rounded-full bg-white px-8 py-3 text-sm font-semibold text-neutral-900 transition-all hover:bg-neutral-200"
             >
               ช้อปคอลเลกชันนี้
             </Link>
           </div>
-          
-          <div className="absolute inset-0 z-0 opacity-40 lg:opacity-70">
-            <Image
-              src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1200&q=80"
-              alt="Hero Fashion"
-              fill
-              priority
-              className="object-cover object-center"
-            />
-          </div>
         </section>
 
         {/* 3. Product Catalog Header */}
-        <section id="products" className="py-12">
+        <section id="products" className="py-8">
           <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <div>
-              <h2 className="text-2xl font-bold tracking-tight">สินค้าแนะนำ (Featured)</h2>
+              <h2 className="text-2xl font-bold tracking-tight">สินค้าแนะนำ</h2>
               <p className="text-sm text-neutral-500">รวมสินค้ายอดนิยมประจำสัปดาห์</p>
             </div>
             
@@ -140,14 +128,11 @@ export default function Home() {
           <div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
             {PRODUCTS.map((product) => (
               <div key={product.id} className="group relative flex flex-col">
-                
-                {/* Image & Badge Container */}
                 <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl bg-neutral-100 dark:bg-neutral-900">
-                  <Image
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
                     src={product.image}
                     alt={product.name}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                     className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
                   />
                   
@@ -169,11 +154,10 @@ export default function Home() {
                   </button>
                 </div>
 
-                {/* Product Info */}
                 <div className="mt-4 flex justify-between">
                   <div>
                     <h3 className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                      <Link href={`/product/${product.id}`}>
+                      <Link href="#">
                         <span aria-hidden="true" className="absolute inset-0" />
                         {product.name}
                       </Link>

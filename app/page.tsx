@@ -1,185 +1,550 @@
-import Link from "next/link";
-import { ShoppingBag, Heart, Search, Menu } from "lucide-react";
+"use client";
 
-// ข้อมูลจำลองสินค้าพร้อมรูป SVG Placeholder เพื่อให้รันได้ทันที ไม่ติด Domain Error
-const PRODUCTS = [
+import { useMemo, useState } from "react";
+
+type Product = {
+  id: number;
+  name: string;
+  category: string;
+  price: number;
+  oldPrice?: number;
+  image: string;
+  badge?: string;
+};
+
+const products: Product[] = [
   {
-    id: "1",
-    name: "Minimalist Oversized Tee",
-    category: "T-Shirts",
-    price: 590,
-    image: "https://placehold.co/400x533/e2e8f0/1e293b?text=Oversized+Tee",
-    isNew: true,
+    id: 1,
+    name: "Oversized Basic T-Shirt",
+    category: "เสื้อยืด",
+    price: 490,
+    oldPrice: 590,
+    badge: "ขายดี",
+    image:
+      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80",
   },
   {
-    id: "2",
+    id: 2,
+    name: "Premium White Shirt",
+    category: "เสื้อเชิ้ต",
+    price: 790,
+    image:
+      "https://images.unsplash.com/photo-1603252110481-7ba873bf42ab?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    id: 3,
     name: "Classic Denim Jacket",
-    category: "Outerwear",
-    price: 1890,
-    image: "https://placehold.co/400x533/e2e8f0/1e293b?text=Denim+Jacket",
-    isNew: false,
-  },
-  {
-    id: "3",
-    name: "Relaxed Fit Cargo Pants",
-    category: "Pants",
+    category: "แจ็กเก็ต",
     price: 1290,
-    image: "https://placehold.co/400x533/e2e8f0/1e293b?text=Cargo+Pants",
-    isNew: true,
+    oldPrice: 1490,
+    badge: "ลดราคา",
+    image:
+      "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=900&q=80",
   },
   {
-    id: "4",
-    name: "Linen Blend Summer Shirt",
-    category: "Shirts",
+    id: 4,
+    name: "Minimal Black T-Shirt",
+    category: "เสื้อยืด",
+    price: 450,
+    image:
+      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    id: 5,
+    name: "Relaxed Fit Pants",
+    category: "กางเกง",
     price: 890,
-    image: "https://placehold.co/400x533/e2e8f0/1e293b?text=Summer+Shirt",
-    isNew: false,
+    image:
+      "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    id: 6,
+    name: "Oversized Hoodie",
+    category: "เสื้อฮู้ด",
+    price: 990,
+    oldPrice: 1190,
+    badge: "New",
+    image:
+      "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    id: 7,
+    name: "Beige Casual Shirt",
+    category: "เสื้อเชิ้ต",
+    price: 690,
+    image:
+      "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    id: 8,
+    name: "Straight Denim Jeans",
+    category: "กางเกง",
+    price: 1090,
+    image:
+      "https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=900&q=80",
   },
 ];
 
-export default function Home() {
+const categories = [
+  "ทั้งหมด",
+  "เสื้อยืด",
+  "เสื้อเชิ้ต",
+  "กางเกง",
+  "แจ็กเก็ต",
+  "เสื้อฮู้ด",
+];
+
+function SearchIcon() {
   return (
-    <div className="min-h-screen bg-neutral-50 text-neutral-900 dark:bg-neutral-950 dark:text-neutral-50">
-      
-      {/* 1. Header Navigation Bar */}
-      <header className="sticky top-0 z-50 border-b border-neutral-200 bg-white/80 backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-950/80">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-4">
-            <button className="sm:hidden p-1 text-neutral-600 hover:text-black dark:text-neutral-300">
-              <Menu size={24} />
-            </button>
-            <Link href="/" className="text-xl font-bold tracking-wider uppercase">
-              ATTIC.<span className="text-neutral-400">STUDIO</span>
-            </Link>
+    <svg
+      width="21"
+      height="21"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
+      <circle cx="11" cy="11" r="7" />
+      <path d="m20 20-4-4" />
+    </svg>
+  );
+}
+
+function ShoppingBagIcon() {
+  return (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+    >
+      <path d="M6 8h12l1 13H5L6 8Z" />
+      <path d="M9 8V6a3 3 0 0 1 6 0v2" />
+    </svg>
+  );
+}
+
+function HeartIcon() {
+  return (
+    <svg
+      width="21"
+      height="21"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+    >
+      <path d="M20.8 8.8c0 5.5-8.8 10-8.8 10s-8.8-4.5-8.8-10A4.8 4.8 0 0 1 12 6.2a4.8 4.8 0 0 1 8.8 2.6Z" />
+    </svg>
+  );
+}
+
+export default function Home() {
+  const [selectedCategory, setSelectedCategory] = useState("ทั้งหมด");
+  const [search, setSearch] = useState("");
+  const [cart, setCart] = useState<number[]>([]);
+  const [liked, setLiked] = useState<number[]>([]);
+
+  const filteredProducts = useMemo(() => {
+    return products.filter((product) => {
+      const categoryMatch =
+        selectedCategory === "ทั้งหมด" ||
+        product.category === selectedCategory;
+
+      const searchMatch = product.name
+        .toLowerCase()
+        .includes(search.toLowerCase());
+
+      return categoryMatch && searchMatch;
+    });
+  }, [selectedCategory, search]);
+
+  const addToCart = (id: number) => {
+    setCart((current) => [...current, id]);
+  };
+
+  const toggleLike = (id: number) => {
+    setLiked((current) =>
+      current.includes(id)
+        ? current.filter((item) => item !== id)
+        : [...current, id]
+    );
+  };
+
+  return (
+    <main className="min-h-screen bg-white text-zinc-900">
+      {/* TOP PROMOTION */}
+      <div className="bg-black px-4 py-2 text-center text-xs font-medium tracking-wide text-white">
+        FREE SHIPPING ON ORDERS OVER ฿1,500
+      </div>
+
+      {/* HEADER */}
+      <header className="sticky top-0 z-50 border-b border-zinc-100 bg-white/95 backdrop-blur">
+        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 lg:px-8">
+          {/* LOGO */}
+          <div className="text-2xl font-black tracking-[0.2em]">
+            MODA
           </div>
 
-          <nav className="hidden space-x-8 text-sm font-medium sm:flex">
-            <Link href="#" className="hover:text-neutral-500 transition-colors">New Arrivals</Link>
-            <Link href="#" className="hover:text-neutral-500 transition-colors">Men</Link>
-            <Link href="#" className="hover:text-neutral-500 transition-colors">Women</Link>
-            <Link href="#" className="text-red-500 hover:text-red-600 font-semibold">Sale</Link>
+          {/* DESKTOP MENU */}
+          <nav className="hidden items-center gap-8 text-sm font-medium md:flex">
+            <a href="#" className="transition hover:text-zinc-500">
+              หน้าแรก
+            </a>
+            <a href="#shop" className="transition hover:text-zinc-500">
+              สินค้า
+            </a>
+            <a href="#categories" className="transition hover:text-zinc-500">
+              หมวดหมู่
+            </a>
+            <a href="#about" className="transition hover:text-zinc-500">
+              เกี่ยวกับเรา
+            </a>
           </nav>
 
+          {/* HEADER ACTIONS */}
           <div className="flex items-center gap-4">
-            <button aria-label="Search" className="p-2 text-neutral-600 hover:text-black dark:text-neutral-300 dark:hover:text-white">
-              <Search size={20} />
+            <div className="hidden items-center gap-2 border-b border-zinc-300 pb-1 sm:flex">
+              <SearchIcon />
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="ค้นหาสินค้า..."
+                className="w-36 bg-transparent text-sm outline-none placeholder:text-zinc-400"
+              />
+            </div>
+
+            <button
+              onClick={() => setLiked([])}
+              className="relative transition hover:scale-105"
+              aria-label="รายการโปรด"
+            >
+              <HeartIcon />
+              {liked.length > 0 && (
+                <span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-black px-1 text-[9px] text-white">
+                  {liked.length}
+                </span>
+              )}
             </button>
-            <button aria-label="Wishlist" className="p-2 text-neutral-600 hover:text-black dark:text-neutral-300 dark:hover:text-white">
-              <Heart size={20} />
-            </button>
-            <button aria-label="Cart" className="relative p-2 text-neutral-600 hover:text-black dark:text-neutral-300 dark:hover:text-white">
-              <ShoppingBag size={20} />
-              <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-black text-[10px] font-bold text-white dark:bg-white dark:text-black">
-                2
-              </span>
+
+            <button
+              className="relative transition hover:scale-105"
+              aria-label="ตะกร้าสินค้า"
+            >
+              <ShoppingBagIcon />
+              {cart.length > 0 && (
+                <span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-black px-1 text-[9px] text-white">
+                  {cart.length}
+                </span>
+              )}
             </button>
           </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        
-        {/* 2. Hero Section */}
-        <section className="relative my-6 overflow-hidden rounded-2xl bg-neutral-900 text-white min-h-[360px] flex items-center">
-          <div className="relative z-10 flex flex-col items-start justify-center px-8 py-12 sm:px-16 lg:w-1/2">
-            <span className="mb-2 text-xs font-semibold uppercase tracking-widest text-neutral-400">
-              Summer Collection 2026
-            </span>
-            <h1 className="text-4xl font-extrabold tracking-tight sm:text-6xl">
-              URBAN <br /> ESSENTIALS.
-            </h1>
-            <p className="mt-4 text-base text-neutral-300">
-              เสื้อผ้าเรียบง่าย ทรงสวมสบาย ตอบโจทย์ทุกลุคในชีวิตประจำวัน
+      {/* MOBILE SEARCH */}
+      <div className="border-b border-zinc-100 px-5 py-3 sm:hidden">
+        <div className="flex items-center gap-2 rounded-lg bg-zinc-100 px-3 py-2.5">
+          <SearchIcon />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="ค้นหาสินค้า..."
+            className="w-full bg-transparent text-sm outline-none"
+          />
+        </div>
+      </div>
+
+      {/* HERO */}
+      <section className="mx-auto max-w-7xl px-5 pt-6 lg:px-8">
+        <div className="relative min-h-[500px] overflow-hidden bg-zinc-100">
+          <img
+            src="https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1800&q=85"
+            alt="Fashion collection"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+
+          <div className="absolute inset-0 bg-black/35" />
+
+          <div className="relative flex min-h-[500px] items-center px-7 py-16 sm:px-14 lg:px-20">
+            <div className="max-w-xl text-white">
+              <p className="mb-4 text-xs font-semibold uppercase tracking-[0.35em]">
+                New Collection 2026
+              </p>
+
+              <h1 className="text-5xl font-black leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl">
+                FIND YOUR
+                <br />
+                OWN STYLE.
+              </h1>
+
+              <p className="mt-6 max-w-md text-sm leading-7 text-white/85 sm:text-base">
+                เสื้อผ้าที่ออกแบบมาเพื่อให้คุณเป็นตัวเอง
+                คัดสรรแฟชั่นคุณภาพสำหรับทุกวันของคุณ
+              </p>
+
+              <a
+                href="#shop"
+                className="mt-8 inline-flex items-center bg-white px-7 py-3.5 text-sm font-semibold text-black transition hover:bg-zinc-200"
+              >
+                SHOP NOW
+                <span className="ml-4">→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CATEGORY */}
+      <section
+        id="categories"
+        className="mx-auto max-w-7xl px-5 py-16 lg:px-8"
+      >
+        <div className="mb-8 flex items-end justify-between">
+          <div>
+            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-zinc-400">
+              Shop by category
             </p>
-            <Link
-              href="#products"
-              className="mt-6 rounded-full bg-white px-8 py-3 text-sm font-semibold text-neutral-900 transition-all hover:bg-neutral-200"
+            <h2 className="text-3xl font-bold tracking-tight">
+              เลือกสไตล์ที่ใช่สำหรับคุณ
+            </h2>
+          </div>
+        </div>
+
+        <div className="flex gap-2 overflow-x-auto pb-2">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={`whitespace-nowrap rounded-full px-5 py-2.5 text-sm transition ${
+                selectedCategory === category
+                  ? "bg-black text-white"
+                  : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
+              }`}
             >
-              ช้อปคอลเลกชันนี้
-            </Link>
-          </div>
-        </section>
+              {category}
+            </button>
+          ))}
+        </div>
+      </section>
 
-        {/* 3. Product Catalog Header */}
-        <section id="products" className="py-8">
-          <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-            <div>
-              <h2 className="text-2xl font-bold tracking-tight">สินค้าแนะนำ</h2>
-              <p className="text-sm text-neutral-500">รวมสินค้ายอดนิยมประจำสัปดาห์</p>
-            </div>
-            
-            <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0">
-              {["ทั้งหมด", "เสื้อยืด", "เสื้อเชิ้ต", "กางเกง", "เสื้อคลุม"].map((cat, idx) => (
-                <button
-                  key={cat}
-                  className={`rounded-full px-4 py-1.5 text-xs font-medium whitespace-nowrap transition-colors ${
-                    idx === 0
-                      ? "bg-neutral-900 text-white dark:bg-white dark:text-black"
-                      : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-300"
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
+      {/* PRODUCT SECTION */}
+      <section
+        id="shop"
+        className="mx-auto max-w-7xl px-5 pb-20 lg:px-8"
+      >
+        <div className="mb-8 flex items-end justify-between">
+          <div>
+            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-zinc-400">
+              Our products
+            </p>
+            <h2 className="text-3xl font-bold tracking-tight">
+              สินค้าแนะนำ
+            </h2>
           </div>
 
-          {/* 4. Product Grid */}
-          <div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-            {PRODUCTS.map((product) => (
-              <div key={product.id} className="group relative flex flex-col">
-                <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl bg-neutral-100 dark:bg-neutral-900">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
+          <p className="hidden text-sm text-zinc-400 sm:block">
+            {filteredProducts.length} products
+          </p>
+        </div>
+
+        {filteredProducts.length === 0 ? (
+          <div className="py-20 text-center">
+            <p className="text-lg font-medium">ไม่พบสินค้าที่ค้นหา</p>
+            <p className="mt-2 text-sm text-zinc-400">
+              ลองค้นหาด้วยคำอื่นหรือเลือกหมวดหมู่ใหม่
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 lg:grid-cols-4 lg:gap-x-6">
+            {filteredProducts.map((product) => (
+              <article key={product.id} className="group">
+                {/* IMAGE */}
+                <div className="relative aspect-[3/4] overflow-hidden bg-zinc-100">
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                   />
-                  
-                  {product.isNew && (
-                    <span className="absolute top-3 left-3 rounded-full bg-black/70 px-2.5 py-1 text-[10px] font-medium tracking-wide text-white backdrop-blur-sm dark:bg-white/70 dark:text-black">
-                      NEW
+
+                  {product.badge && (
+                    <span className="absolute left-3 top-3 bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-wide">
+                      {product.badge}
                     </span>
                   )}
 
-                  <button 
-                    aria-label="Add to Wishlist"
-                    className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-neutral-700 backdrop-blur-sm transition-colors hover:bg-white hover:text-red-500 dark:bg-black/80 dark:text-neutral-200"
+                  <button
+                    onClick={() => toggleLike(product.id)}
+                    className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white transition hover:scale-105"
+                    aria-label="เพิ่มรายการโปรด"
                   >
-                    <Heart size={16} />
+                    <span
+                      className={
+                        liked.includes(product.id)
+                          ? "text-black"
+                          : "text-zinc-400"
+                      }
+                    >
+                      {liked.includes(product.id) ? "♥" : "♡"}
+                    </span>
                   </button>
 
-                  <button className="absolute bottom-3 left-3 right-3 translate-y-4 rounded-lg bg-white/90 py-2.5 text-xs font-semibold text-neutral-900 opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 hover:bg-white dark:bg-neutral-900/90 dark:text-white">
-                    + เพิ่มลงตะกร้า
+                  {/* ADD CART */}
+                  <button
+                    onClick={() => addToCart(product.id)}
+                    className="absolute bottom-0 left-0 right-0 translate-y-full bg-black py-3 text-xs font-semibold text-white transition duration-300 group-hover:translate-y-0"
+                  >
+                    เพิ่มลงตะกร้า
                   </button>
                 </div>
 
-                <div className="mt-4 flex justify-between">
-                  <div>
-                    <h3 className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                      <Link href="#">
-                        <span aria-hidden="true" className="absolute inset-0" />
-                        {product.name}
-                      </Link>
-                    </h3>
-                    <p className="mt-1 text-xs text-neutral-500">{product.category}</p>
-                  </div>
-                  <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                    ฿{product.price.toLocaleString()}
+                {/* PRODUCT INFO */}
+                <div className="pt-4">
+                  <p className="mb-1 text-xs text-zinc-400">
+                    {product.category}
                   </p>
+
+                  <h3 className="line-clamp-1 text-sm font-medium">
+                    {product.name}
+                  </h3>
+
+                  <div className="mt-2 flex items-center gap-2">
+                    <span className="text-sm font-bold">
+                      ฿{product.price.toLocaleString()}
+                    </span>
+
+                    {product.oldPrice && (
+                      <span className="text-xs text-zinc-400 line-through">
+                        ฿{product.oldPrice.toLocaleString()}
+                      </span>
+                    )}
+                  </div>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
-        </section>
-      </main>
+        )}
+      </section>
 
-      {/* 5. Footer */}
-      <footer className="mt-20 border-t border-neutral-200 bg-white py-12 dark:border-neutral-800 dark:bg-neutral-950">
-        <div className="mx-auto max-w-7xl px-4 text-center text-xs text-neutral-500 sm:px-6 lg:px-8">
-          <p>© 2026 ATTIC.STUDIO. All rights reserved.</p>
+      {/* PROMOTION */}
+      <section className="bg-zinc-100">
+        <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 py-20 md:grid-cols-2 lg:px-8">
+          <div>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-zinc-400">
+              Special Offer
+            </p>
+
+            <h2 className="text-4xl font-black leading-tight sm:text-5xl">
+              EVERYDAY
+              <br />
+              ESSENTIALS
+            </h2>
+
+            <p className="mt-5 max-w-md text-sm leading-7 text-zinc-500">
+              เสื้อผ้าพื้นฐานที่สามารถ Mix & Match
+              ได้ง่าย เหมาะกับทุกวันและทุกสไตล์
+            </p>
+
+            <button className="mt-7 bg-black px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-zinc-800">
+              EXPLORE COLLECTION →
+            </button>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <img
+              src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=800&q=80"
+              alt="Fashion"
+              className="h-72 w-full object-cover"
+            />
+            <img
+              src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=800&q=80"
+              alt="Fashion collection"
+              className="mt-10 h-72 w-full object-cover"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* FEATURES */}
+      <section id="about" className="border-b border-zinc-100">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 divide-y divide-zinc-100 px-5 py-14 sm:grid-cols-3 sm:divide-x sm:divide-y-0 lg:px-8">
+          <div className="px-5 py-5 text-center">
+            <div className="mb-3 text-2xl">🚚</div>
+            <h3 className="text-sm font-semibold">จัดส่งรวดเร็ว</h3>
+            <p className="mt-2 text-xs text-zinc-400">
+              จัดส่งทั่วประเทศอย่างรวดเร็ว
+            </p>
+          </div>
+
+          <div className="px-5 py-5 text-center">
+            <div className="mb-3 text-2xl">↩</div>
+            <h3 className="text-sm font-semibold">เปลี่ยน/คืนสินค้า</h3>
+            <p className="mt-2 text-xs text-zinc-400">
+              เปลี่ยนสินค้าได้ภายใน 7 วัน
+            </p>
+          </div>
+
+          <div className="px-5 py-5 text-center">
+            <div className="mb-3 text-2xl">✓</div>
+            <h3 className="text-sm font-semibold">สินค้าคุณภาพ</h3>
+            <p className="mt-2 text-xs text-zinc-400">
+              คัดสรรสินค้าคุณภาพก่อนส่งถึงคุณ
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="bg-black px-5 py-12 text-white lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+            <div>
+              <h2 className="text-2xl font-black tracking-[0.2em]">
+                MODA
+              </h2>
+              <p className="mt-4 max-w-xs text-sm leading-6 text-zinc-400">
+                Modern fashion store
+                สำหรับคนที่ต้องการสร้างสไตล์ในแบบของตัวเอง
+              </p>
+            </div>
+
+            <div>
+              <h3 className="mb-4 text-sm font-semibold">SHOP</h3>
+              <div className="space-y-3 text-sm text-zinc-400">
+                <p>เสื้อยืด</p>
+                <p>เสื้อเชิ้ต</p>
+                <p>กางเกง</p>
+                <p>แจ็กเก็ต</p>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="mb-4 text-sm font-semibold">HELP</h3>
+              <div className="space-y-3 text-sm text-zinc-400">
+                <p>การจัดส่ง</p>
+                <p>การคืนสินค้า</p>
+                <p>คำถามที่พบบ่อย</p>
+                <p>ติดต่อเรา</p>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="mb-4 text-sm font-semibold">FOLLOW US</h3>
+              <div className="space-y-3 text-sm text-zinc-400">
+                <p>Instagram</p>
+                <p>Facebook</p>
+                <p>TikTok</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-12 border-t border-zinc-800 pt-6 text-xs text-zinc-500">
+            © 2026 MODA. All rights reserved.
+          </div>
         </div>
       </footer>
-    </div>
+    </main>
   );
 }

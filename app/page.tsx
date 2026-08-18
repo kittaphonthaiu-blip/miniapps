@@ -169,9 +169,10 @@ export default function Home() {
       const categoryMatch =
         selectedCategory === "ทั้งหมด" || product.category === selectedCategory;
 
-      const searchMatch = product.name
-        .toLowerCase()
-        .includes(search.toLowerCase());
+      // แก้ไขให้ค้นหาจากทั้งชื่อและหมวดหมู่
+      const searchMatch = 
+        product.name.toLowerCase().includes(search.toLowerCase()) ||
+        product.category.toLowerCase().includes(search.toLowerCase());
 
       return categoryMatch && searchMatch;
     });

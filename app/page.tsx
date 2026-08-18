@@ -12,6 +12,12 @@ type Product = {
   badge?: string;
 };
 
+// เพิ่ม Type สำหรับเก็บสินค้าในตะกร้า
+type CartItem = {
+  id: number;
+  quantity: number;
+};
+
 const products: Product[] = [
   {
     id: 1,
@@ -141,17 +147,27 @@ function HeartIcon() {
   );
 }
 
+function CloseIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M18 6L6 18M6 6l12 12" />
+    </svg>
+  );
+}
+
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("ทั้งหมด");
   const [search, setSearch] = useState("");
-  const [cart, setCart] = useState<number[]>([]);
+  // อัปเดต State ตะกร้าให้เก็บทั้ง id และ quantity
+  const [cart, setCart] = useState<CartItem[]>([]);
   const [liked, setLiked] = useState<number[]>([]);
+  // State สำหรับเปิด/ปิด หน้าต่างตะกร้าสินค้า
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
       const categoryMatch =
-        selectedCategory === "ทั้งหมด" ||
-        product.category === selectedCategory;
+        selectedCategory === "ทั้งหมด" || product.category === selectedCategory;
 
       const searchMatch = product.name
         .toLowerCase()
@@ -161,8 +177,56 @@ export default function Home() {
     });
   }, [selectedCategory, search]);
 
+  // ฟังก์ชันเพิ่มลงตะกร้า
   const addToCart = (id: number) => {
-    setCart((current) => [...current, id]);
+    setCart((currentCart) => {
+      const existingItem = currentCart.find((item) => item.id === id);
+      if (existingItem) {
+        // ถ้ามีอยู่แล้วให้เพิ่มจำนวน
+        return currentCart.map((item) =>
+          item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+        );
+      }
+      // ถ้ายังไม่มีให้เพิ่มเข้าไปใหม่จำนวน 1 ชิ้น
+      return [...currentCart, { id, quantity: 1 }];
+    });
+    // เปิดตะกร้าโชว์ให้ผู้ใช้เห็นทันทีที่กดเพิ่ม
+    setIsCartOpen(true);
+  };
+
+  // ฟังก์ชันปรับจำนวนสินค้าในตะกร้า
+  const updateQuantity = (id: number, delta: number) => {
+    setCart((current) =>
+      current.map((item) => {
+        if (item.id === id) {
+          const newQuantity = item.quantity + delta;
+          return { ...item, quantity: Math.max(0, newQuantity) };
+        }
+        return item;
+      }).filter((item) => item.quantity > 0) // ถ้าน้อยกว่าหรือเท่ากับ 0 ให้ลบออกจากตะกร้า
+    );
+  };
+
+  // ฟังก์ชันลบสินค้าออกจากตะกร้า
+  const removeFromCart = (id: number) => {
+    setCart((current) => current.filter((item) => item.id !== id));
+  };
+
+  // คำนวณจำนวนชิ้นทั้งหมดในตะกร้า
+  const cartItemsCount = cart.reduce((total, item) => total + item.quantity, 0);
+
+  // คำนวณราคารวม
+  const cartTotal = cart.reduce((total, item) => {
+    const product = products.find((p) => p.id === item.id);
+    return total + (product ? product.price * item.quantity : 0);
+  }, 0);
+
+  // ฟังก์ชันจำลองการสั่งซื้อ
+  const handleCheckout = () => {
+    if (cart.length === 0) return;
+    alert(`สั่งซื้อสำเร็จ! ยอดชำระทั้งหมด ฿${cartTotal.toLocaleString()}`);
+    setCart([]); // เคลียร์ตะกร้า
+    setIsCartOpen(false); // ปิดตะกร้า
   };
 
   const toggleLike = (id: number) => {
@@ -181,12 +245,10 @@ export default function Home() {
       </div>
 
       {/* HEADER */}
-      <header className="sticky top-0 z-50 border-b border-zinc-100 bg-white/95 backdrop-blur">
+      <header className="sticky top-0 z-40 border-b border-zinc-100 bg-white/95 backdrop-blur">
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 lg:px-8">
           {/* LOGO */}
-          <div className="text-2xl font-black tracking-[0.2em]">
-            MODA
-          </div>
+          <div className="text-2xl font-black tracking-[0.2em]">MODA</div>
 
           {/* DESKTOP MENU */}
           <nav className="hidden items-center gap-8 text-sm font-medium md:flex">
@@ -229,14 +291,16 @@ export default function Home() {
               )}
             </button>
 
+            {/* ปุ่มเปิดตะกร้า */}
             <button
+              onClick={() => setIsCartOpen(true)}
               className="relative transition hover:scale-105"
               aria-label="ตะกร้าสินค้า"
             >
               <ShoppingBagIcon />
-              {cart.length > 0 && (
+              {cartItemsCount > 0 && (
                 <span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-black px-1 text-[9px] text-white">
-                  {cart.length}
+                  {cartItemsCount}
                 </span>
               )}
             </button>
@@ -256,6 +320,112 @@ export default function Home() {
           />
         </div>
       </div>
+
+      {/* CART DRAWER (หน้าต่างสไลด์ตะกร้าสินค้า) */}
+      {isCartOpen && (
+        <div className="fixed inset-0 z-50 flex justify-end">
+          {/* Background Overlay */}
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
+            onClick={() => setIsCartOpen(false)}
+          />
+
+          {/* Drawer Panel */}
+          <div className="relative flex w-full max-w-md flex-col bg-white shadow-2xl animate-in slide-in-from-right duration-300">
+            {/* Drawer Header */}
+            <div className="flex items-center justify-between border-b border-zinc-100 px-6 py-5">
+              <h2 className="text-xl font-bold tracking-tight">ตะกร้าสินค้า ({cartItemsCount})</h2>
+              <button
+                onClick={() => setIsCartOpen(false)}
+                className="p-2 text-zinc-400 transition hover:text-black"
+              >
+                <CloseIcon />
+              </button>
+            </div>
+
+            {/* Cart Items List */}
+            <div className="flex-1 overflow-y-auto px-6 py-4">
+              {cart.length === 0 ? (
+                <div className="flex h-full flex-col items-center justify-center text-zinc-400">
+                  <ShoppingBagIcon />
+                  <p className="mt-4 text-sm">ยังไม่มีสินค้าในตะกร้า</p>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-6">
+                  {cart.map((cartItem) => {
+                    const product = products.find((p) => p.id === cartItem.id);
+                    if (!product) return null;
+
+                    return (
+                      <div key={cartItem.id} className="flex gap-4">
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="h-24 w-20 rounded-md object-cover bg-zinc-100"
+                        />
+                        <div className="flex flex-1 flex-col">
+                          <div className="flex justify-between">
+                            <div>
+                              <h3 className="text-sm font-medium line-clamp-1">{product.name}</h3>
+                              <p className="mt-1 text-xs text-zinc-500">{product.category}</p>
+                            </div>
+                            <button
+                              onClick={() => removeFromCart(cartItem.id)}
+                              className="text-xs text-zinc-400 underline hover:text-black"
+                            >
+                              ลบ
+                            </button>
+                          </div>
+
+                          <div className="mt-auto flex items-end justify-between">
+                            {/* ปุ่มเพิ่มลดจำนวน */}
+                            <div className="flex items-center gap-3 rounded-md border border-zinc-200 px-3 py-1">
+                              <button
+                                onClick={() => updateQuantity(cartItem.id, -1)}
+                                className="text-zinc-500 hover:text-black"
+                              >
+                                -
+                              </button>
+                              <span className="text-sm font-medium w-4 text-center">
+                                {cartItem.quantity}
+                              </span>
+                              <button
+                                onClick={() => updateQuantity(cartItem.id, 1)}
+                                className="text-zinc-500 hover:text-black"
+                              >
+                                +
+                              </button>
+                            </div>
+                            <span className="font-bold">
+                              ฿{(product.price * cartItem.quantity).toLocaleString()}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Drawer Footer (Summary & Checkout) */}
+            {cart.length > 0 && (
+              <div className="border-t border-zinc-100 bg-zinc-50 p-6">
+                <div className="mb-4 flex items-center justify-between text-lg font-bold">
+                  <span>ยอดรวมทั้งหมด</span>
+                  <span>฿{cartTotal.toLocaleString()}</span>
+                </div>
+                <button
+                  onClick={handleCheckout}
+                  className="w-full bg-black py-4 text-sm font-bold text-white transition hover:bg-zinc-800"
+                >
+                  สั่งซื้อสินค้า (Checkout)
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* HERO */}
       <section className="mx-auto max-w-7xl px-5 pt-6 lg:px-8">
@@ -298,10 +468,7 @@ export default function Home() {
       </section>
 
       {/* CATEGORY */}
-      <section
-        id="categories"
-        className="mx-auto max-w-7xl px-5 py-16 lg:px-8"
-      >
+      <section id="categories" className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
         <div className="mb-8 flex items-end justify-between">
           <div>
             <p className="mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-zinc-400">
@@ -331,18 +498,13 @@ export default function Home() {
       </section>
 
       {/* PRODUCT SECTION */}
-      <section
-        id="shop"
-        className="mx-auto max-w-7xl px-5 pb-20 lg:px-8"
-      >
+      <section id="shop" className="mx-auto max-w-7xl px-5 pb-20 lg:px-8">
         <div className="mb-8 flex items-end justify-between">
           <div>
             <p className="mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-zinc-400">
               Our products
             </p>
-            <h2 className="text-3xl font-bold tracking-tight">
-              สินค้าแนะนำ
-            </h2>
+            <h2 className="text-3xl font-bold tracking-tight">สินค้าแนะนำ</h2>
           </div>
 
           <p className="hidden text-sm text-zinc-400 sm:block">
@@ -443,8 +605,8 @@ export default function Home() {
             </h2>
 
             <p className="mt-5 max-w-md text-sm leading-7 text-zinc-500">
-              เสื้อผ้าพื้นฐานที่สามารถ Mix & Match
-              ได้ง่าย เหมาะกับทุกวันและทุกสไตล์
+              เสื้อผ้าพื้นฐานที่สามารถ Mix & Match ได้ง่าย
+              เหมาะกับทุกวันและทุกสไตล์
             </p>
 
             <button className="mt-7 bg-black px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-zinc-800">
@@ -501,12 +663,9 @@ export default function Home() {
         <div className="mx-auto max-w-7xl">
           <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
             <div>
-              <h2 className="text-2xl font-black tracking-[0.2em]">
-                MODA
-              </h2>
+              <h2 className="text-2xl font-black tracking-[0.2em]">MODA</h2>
               <p className="mt-4 max-w-xs text-sm leading-6 text-zinc-400">
-                Modern fashion store
-                สำหรับคนที่ต้องการสร้างสไตล์ในแบบของตัวเอง
+                Modern fashion store สำหรับคนที่ต้องการสร้างสไตล์ในแบบของตัวเอง
               </p>
             </div>
 

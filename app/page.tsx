@@ -12,12 +12,18 @@ type Product = {
   badge?: string;
 };
 
-// เพิ่ม Type สำหรับเก็บสินค้าในตะกร้า
 type CartItem = {
   id: number;
   quantity: number;
 };
 
+// เพิ่มโครงสร้างข้อมูลสำหรับผู้ใช้
+type User = {
+  name: string;
+  email: string;
+};
+
+// ขยายรายการสินค้าเป็น 20 รายการ
 const products: Product[] = [
   {
     id: 1,
@@ -26,16 +32,14 @@ const products: Product[] = [
     price: 490,
     oldPrice: 590,
     badge: "ขายดี",
-    image:
-      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80",
+    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80",
   },
   {
     id: 2,
     name: "Premium White Shirt",
     category: "เสื้อเชิ้ต",
     price: 790,
-    image:
-      "https://images.unsplash.com/photo-1603252110481-7ba873bf42ab?auto=format&fit=crop&w=900&q=80",
+    image: "https://images.unsplash.com/photo-1603252110481-7ba873bf42ab?auto=format&fit=crop&w=900&q=80",
   },
   {
     id: 3,
@@ -44,24 +48,21 @@ const products: Product[] = [
     price: 1290,
     oldPrice: 1490,
     badge: "ลดราคา",
-    image:
-      "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=900&q=80",
+    image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=900&q=80",
   },
   {
     id: 4,
     name: "Minimal Black T-Shirt",
     category: "เสื้อยืด",
     price: 450,
-    image:
-      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?auto=format&fit=crop&w=900&q=80",
+    image: "https://images.unsplash.com/photo-1503341504253-dff4815485f1?auto=format&fit=crop&w=900&q=80",
   },
   {
     id: 5,
     name: "Relaxed Fit Pants",
     category: "กางเกง",
     price: 890,
-    image:
-      "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=900&q=80",
+    image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=900&q=80",
   },
   {
     id: 6,
@@ -70,24 +71,112 @@ const products: Product[] = [
     price: 990,
     oldPrice: 1190,
     badge: "New",
-    image:
-      "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=900&q=80",
+    image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=900&q=80",
   },
   {
     id: 7,
     name: "Beige Casual Shirt",
     category: "เสื้อเชิ้ต",
     price: 690,
-    image:
-      "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?auto=format&fit=crop&w=900&q=80",
+    image: "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?auto=format&fit=crop&w=900&q=80",
   },
   {
     id: 8,
     name: "Straight Denim Jeans",
     category: "กางเกง",
     price: 1090,
-    image:
-      "https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=900&q=80",
+    image: "https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    id: 9,
+    name: "Vintage Graphic Tee",
+    category: "เสื้อยืด",
+    price: 520,
+    badge: "New",
+    image: "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    id: 10,
+    name: "Linen Long Sleeve Shirt",
+    category: "เสื้อเชิ้ต",
+    price: 850,
+    oldPrice: 990,
+    badge: "ลดราคา",
+    image: "https://images.unsplash.com/photo-1588359348347-9bc6cbbb689e?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    id: 11,
+    name: "Cargo Pants Olive",
+    category: "กางเกง",
+    price: 950,
+    image: "https://images.unsplash.com/photo-1517445312882-bc9910d016b7?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    id: 12,
+    name: "Zip-Up Fleece Jacket",
+    category: "แจ็กเก็ต",
+    price: 1390,
+    image: "https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    id: 13,
+    name: "Essential Pullover Hoodie",
+    category: "เสื้อฮู้ด",
+    price: 890,
+    image: "https://images.unsplash.com/photo-1509967419530-da38b4704bc6?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    id: 14,
+    name: "Striped Cotton T-Shirt",
+    category: "เสื้อยืด",
+    price: 420,
+    image: "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    id: 15,
+    name: "Chino Shorts Navy",
+    category: "กางเกง",
+    price: 590,
+    image: "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    id: 16,
+    name: "Corduroy Overshirt",
+    category: "เสื้อเชิ้ต",
+    price: 1190,
+    badge: "ขายดี",
+    image: "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    id: 17,
+    name: "Biker Leather Jacket",
+    category: "แจ็กเก็ต",
+    price: 2490,
+    oldPrice: 2890,
+    badge: "ลดราคา",
+    image: "https://images.unsplash.com/photo-1520975954732-35dd22299614?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    id: 18,
+    name: "Streetwear Crop Hoodie",
+    category: "เสื้อฮู้ด",
+    price: 790,
+    image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    id: 19,
+    name: "Slim Fit Black Jeans",
+    category: "กางเกง",
+    price: 990,
+    image: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    id: 20,
+    name: "Heavyweight Boxy Tee",
+    category: "เสื้อยืด",
+    price: 590,
+    badge: "New",
+    image: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=900&q=80",
   },
 ];
 
@@ -100,16 +189,10 @@ const categories = [
   "เสื้อฮู้ด",
 ];
 
+// Icons
 function SearchIcon() {
   return (
-    <svg
-      width="21"
-      height="21"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
+    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
       <circle cx="11" cy="11" r="7" />
       <path d="m20 20-4-4" />
     </svg>
@@ -118,14 +201,7 @@ function SearchIcon() {
 
 function ShoppingBagIcon() {
   return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-    >
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
       <path d="M6 8h12l1 13H5L6 8Z" />
       <path d="M9 8V6a3 3 0 0 1 6 0v2" />
     </svg>
@@ -134,14 +210,7 @@ function ShoppingBagIcon() {
 
 function HeartIcon() {
   return (
-    <svg
-      width="21"
-      height="21"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-    >
+    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
       <path d="M20.8 8.8c0 5.5-8.8 10-8.8 10s-8.8-4.5-8.8-10A4.8 4.8 0 0 1 12 6.2a4.8 4.8 0 0 1 8.8 2.6Z" />
     </svg>
   );
@@ -155,22 +224,38 @@ function CloseIcon() {
   );
 }
 
+function UserIcon() {
+  return (
+    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+  );
+}
+
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("ทั้งหมด");
   const [search, setSearch] = useState("");
-  // อัปเดต State ตะกร้าให้เก็บทั้ง id และ quantity
   const [cart, setCart] = useState<CartItem[]>([]);
   const [liked, setLiked] = useState<number[]>([]);
-  // State สำหรับเปิด/ปิด หน้าต่างตะกร้าสินค้า
   const [isCartOpen, setIsCartOpen] = useState(false);
+
+  // State สำหรับระบบสมัครสมาชิก/เข้าสู่ระบบ
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<"login" | "register">("register");
+  
+  // Form State
+  const [authName, setAuthName] = useState("");
+  const [authEmail, setAuthEmail] = useState("");
+  const [authPassword, setAuthPassword] = useState("");
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
       const categoryMatch =
         selectedCategory === "ทั้งหมด" || product.category === selectedCategory;
 
-      // แก้ไขให้ค้นหาจากทั้งชื่อและหมวดหมู่
-      const searchMatch = 
+      const searchMatch =
         product.name.toLowerCase().includes(search.toLowerCase()) ||
         product.category.toLowerCase().includes(search.toLowerCase());
 
@@ -178,56 +263,49 @@ export default function Home() {
     });
   }, [selectedCategory, search]);
 
-  // ฟังก์ชันเพิ่มลงตะกร้า
   const addToCart = (id: number) => {
     setCart((currentCart) => {
       const existingItem = currentCart.find((item) => item.id === id);
       if (existingItem) {
-        // ถ้ามีอยู่แล้วให้เพิ่มจำนวน
         return currentCart.map((item) =>
           item.id === id ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
-      // ถ้ายังไม่มีให้เพิ่มเข้าไปใหม่จำนวน 1 ชิ้น
       return [...currentCart, { id, quantity: 1 }];
     });
-    // เปิดตะกร้าโชว์ให้ผู้ใช้เห็นทันทีที่กดเพิ่ม
     setIsCartOpen(true);
   };
 
-  // ฟังก์ชันปรับจำนวนสินค้าในตะกร้า
   const updateQuantity = (id: number, delta: number) => {
     setCart((current) =>
-      current.map((item) => {
-        if (item.id === id) {
-          const newQuantity = item.quantity + delta;
-          return { ...item, quantity: Math.max(0, newQuantity) };
-        }
-        return item;
-      }).filter((item) => item.quantity > 0) // ถ้าน้อยกว่าหรือเท่ากับ 0 ให้ลบออกจากตะกร้า
+      current
+        .map((item) => {
+          if (item.id === id) {
+            const newQuantity = item.quantity + delta;
+            return { ...item, quantity: Math.max(0, newQuantity) };
+          }
+          return item;
+        })
+        .filter((item) => item.quantity > 0)
     );
   };
 
-  // ฟังก์ชันลบสินค้าออกจากตะกร้า
   const removeFromCart = (id: number) => {
     setCart((current) => current.filter((item) => item.id !== id));
   };
 
-  // คำนวณจำนวนชิ้นทั้งหมดในตะกร้า
   const cartItemsCount = cart.reduce((total, item) => total + item.quantity, 0);
 
-  // คำนวณราคารวม
   const cartTotal = cart.reduce((total, item) => {
     const product = products.find((p) => p.id === item.id);
     return total + (product ? product.price * item.quantity : 0);
   }, 0);
 
-  // ฟังก์ชันจำลองการสั่งซื้อ
   const handleCheckout = () => {
     if (cart.length === 0) return;
     alert(`สั่งซื้อสำเร็จ! ยอดชำระทั้งหมด ฿${cartTotal.toLocaleString()}`);
-    setCart([]); // เคลียร์ตะกร้า
-    setIsCartOpen(false); // ปิดตะกร้า
+    setCart([]);
+    setIsCartOpen(false);
   };
 
   const toggleLike = (id: number) => {
@@ -236,6 +314,30 @@ export default function Home() {
         ? current.filter((item) => item !== id)
         : [...current, id]
     );
+  };
+
+  // การจัดการการลงชื่อเข้าใช้/สมัครสมาชิก
+  const handleAuthSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (authMode === "register") {
+      if (!authName || !authEmail) return;
+      setCurrentUser({ name: authName, email: authEmail });
+      alert(`สมัครสมาชิกสำเร็จ! ยินดีต้อนรับคุณ ${authName}`);
+    } else {
+      if (!authEmail) return;
+      setCurrentUser({ name: authEmail.split("@")[0], email: authEmail });
+      alert(`เข้าสู่ระบบสำเร็จ!`);
+    }
+    // เคลียร์ฟอร์มและปิด Modal
+    setAuthName("");
+    setAuthEmail("");
+    setAuthPassword("");
+    setIsAuthOpen(false);
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    alert("ออกจากระบบเรียบร้อยแล้ว");
   };
 
   return (
@@ -278,6 +380,30 @@ export default function Home() {
                 className="w-36 bg-transparent text-sm outline-none placeholder:text-zinc-400"
               />
             </div>
+
+            {/* USER / AUTH ACTION */}
+            {currentUser ? (
+              <div className="flex items-center gap-2">
+                <span className="hidden text-xs font-semibold sm:inline">
+                  สวัสดี, {currentUser.name}
+                </span>
+                <button
+                  onClick={handleLogout}
+                  className="text-xs text-zinc-500 underline hover:text-black"
+                >
+                  ออกจากระบบ
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setIsAuthOpen(true)}
+                className="flex items-center gap-1 text-sm font-medium transition hover:opacity-75"
+                aria-label="เข้าสู่ระบบ/สมัครสมาชิก"
+              >
+                <UserIcon />
+                <span className="hidden sm:inline">เข้าสู่ระบบ</span>
+              </button>
+            )}
 
             <button
               onClick={() => setLiked([])}
@@ -322,20 +448,121 @@ export default function Home() {
         </div>
       </div>
 
-      {/* CART DRAWER (หน้าต่างสไลด์ตะกร้าสินค้า) */}
+      {/* AUTH MODAL (สมัครสมาชิก / เข้าสู่ระบบ) */}
+      {isAuthOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+          <div className="relative w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
+            <button
+              onClick={() => setIsAuthOpen(false)}
+              className="absolute right-4 top-4 text-zinc-400 hover:text-black"
+            >
+              <CloseIcon />
+            </button>
+
+            <div className="mb-6 text-center">
+              <h2 className="text-2xl font-bold">
+                {authMode === "register" ? "สมัครสมาชิก" : "เข้าสู่ระบบ"}
+              </h2>
+              <p className="mt-1 text-xs text-zinc-500">
+                {authMode === "register"
+                  ? "สร้างบัญชีใหม่เพื่อรับข้อเสนอพิเศษ"
+                  : "เข้าสู่ระบบเพื่อดำเนินการสั่งซื้อ"}
+              </p>
+            </div>
+
+            <form onSubmit={handleAuthSubmit} className="space-y-4">
+              {authMode === "register" && (
+                <div>
+                  <label className="block text-xs font-semibold text-zinc-600">
+                    ชื่อ-นามสกุล
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={authName}
+                    onChange={(e) => setAuthName(e.target.value)}
+                    placeholder="กรอกชื่อของคุณ"
+                    className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-black"
+                  />
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs font-semibold text-zinc-600">
+                  อีเมล
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={authEmail}
+                  onChange={(e) => setAuthEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-black"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-zinc-600">
+                  รหัสผ่าน
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={authPassword}
+                  onChange={(e) => setAuthPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-black"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-black py-3 text-sm font-bold text-white transition hover:bg-zinc-800"
+              >
+                {authMode === "register" ? "ยืนยันการสมัคร" : "เข้าสู่ระบบ"}
+              </button>
+            </form>
+
+            <div className="mt-4 text-center text-xs text-zinc-500">
+              {authMode === "register" ? (
+                <p>
+                  มีบัญชีอยู่แล้ว?{" "}
+                  <button
+                    onClick={() => setAuthMode("login")}
+                    className="font-bold text-black underline"
+                  >
+                    เข้าสู่ระบบ
+                  </button>
+                </p>
+              ) : (
+                <p>
+                  ยังไม่มีบัญชี?{" "}
+                  <button
+                    onClick={() => setAuthMode("register")}
+                    className="font-bold text-black underline"
+                  >
+                    สมัครสมาชิก
+                  </button>
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* CART DRAWER */}
       {isCartOpen && (
         <div className="fixed inset-0 z-50 flex justify-end">
-          {/* Background Overlay */}
           <div
             className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
             onClick={() => setIsCartOpen(false)}
           />
 
-          {/* Drawer Panel */}
-          <div className="relative flex w-full max-w-md flex-col bg-white shadow-2xl animate-in slide-in-from-right duration-300">
-            {/* Drawer Header */}
+          <div className="relative flex w-full max-w-md flex-col bg-white shadow-2xl">
             <div className="flex items-center justify-between border-b border-zinc-100 px-6 py-5">
-              <h2 className="text-xl font-bold tracking-tight">ตะกร้าสินค้า ({cartItemsCount})</h2>
+              <h2 className="text-xl font-bold tracking-tight">
+                ตะกร้าสินค้า ({cartItemsCount})
+              </h2>
               <button
                 onClick={() => setIsCartOpen(false)}
                 className="p-2 text-zinc-400 transition hover:text-black"
@@ -344,7 +571,6 @@ export default function Home() {
               </button>
             </div>
 
-            {/* Cart Items List */}
             <div className="flex-1 overflow-y-auto px-6 py-4">
               {cart.length === 0 ? (
                 <div className="flex h-full flex-col items-center justify-center text-zinc-400">
@@ -362,13 +588,17 @@ export default function Home() {
                         <img
                           src={product.image}
                           alt={product.name}
-                          className="h-24 w-20 rounded-md object-cover bg-zinc-100"
+                          className="h-24 w-20 rounded-md bg-zinc-100 object-cover"
                         />
                         <div className="flex flex-1 flex-col">
                           <div className="flex justify-between">
                             <div>
-                              <h3 className="text-sm font-medium line-clamp-1">{product.name}</h3>
-                              <p className="mt-1 text-xs text-zinc-500">{product.category}</p>
+                              <h3 className="line-clamp-1 text-sm font-medium">
+                                {product.name}
+                              </h3>
+                              <p className="mt-1 text-xs text-zinc-500">
+                                {product.category}
+                              </p>
                             </div>
                             <button
                               onClick={() => removeFromCart(cartItem.id)}
@@ -379,7 +609,6 @@ export default function Home() {
                           </div>
 
                           <div className="mt-auto flex items-end justify-between">
-                            {/* ปุ่มเพิ่มลดจำนวน */}
                             <div className="flex items-center gap-3 rounded-md border border-zinc-200 px-3 py-1">
                               <button
                                 onClick={() => updateQuantity(cartItem.id, -1)}
@@ -387,7 +616,7 @@ export default function Home() {
                               >
                                 -
                               </button>
-                              <span className="text-sm font-medium w-4 text-center">
+                              <span className="w-4 text-center text-sm font-medium">
                                 {cartItem.quantity}
                               </span>
                               <button
@@ -409,7 +638,6 @@ export default function Home() {
               )}
             </div>
 
-            {/* Drawer Footer (Summary & Checkout) */}
             {cart.length > 0 && (
               <div className="border-t border-zinc-100 bg-zinc-50 p-6">
                 <div className="mb-4 flex items-center justify-between text-lg font-bold">
@@ -524,7 +752,6 @@ export default function Home() {
           <div className="grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 lg:grid-cols-4 lg:gap-x-6">
             {filteredProducts.map((product) => (
               <article key={product.id} className="group">
-                {/* IMAGE */}
                 <div className="relative aspect-[3/4] overflow-hidden bg-zinc-100">
                   <img
                     src={product.image}
@@ -554,7 +781,6 @@ export default function Home() {
                     </span>
                   </button>
 
-                  {/* ADD CART */}
                   <button
                     onClick={() => addToCart(product.id)}
                     className="absolute bottom-0 left-0 right-0 translate-y-full bg-black py-3 text-xs font-semibold text-white transition duration-300 group-hover:translate-y-0"
@@ -563,7 +789,6 @@ export default function Home() {
                   </button>
                 </div>
 
-                {/* PRODUCT INFO */}
                 <div className="pt-4">
                   <p className="mb-1 text-xs text-zinc-400">
                     {product.category}
@@ -589,74 +814,6 @@ export default function Home() {
             ))}
           </div>
         )}
-      </section>
-
-      {/* PROMOTION */}
-      <section className="bg-zinc-100">
-        <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 py-20 md:grid-cols-2 lg:px-8">
-          <div>
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-zinc-400">
-              Special Offer
-            </p>
-
-            <h2 className="text-4xl font-black leading-tight sm:text-5xl">
-              EVERYDAY
-              <br />
-              ESSENTIALS
-            </h2>
-
-            <p className="mt-5 max-w-md text-sm leading-7 text-zinc-500">
-              เสื้อผ้าพื้นฐานที่สามารถ Mix & Match ได้ง่าย
-              เหมาะกับทุกวันและทุกสไตล์
-            </p>
-
-            <button className="mt-7 bg-black px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-zinc-800">
-              EXPLORE COLLECTION →
-            </button>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <img
-              src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=800&q=80"
-              alt="Fashion"
-              className="h-72 w-full object-cover"
-            />
-            <img
-              src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=800&q=80"
-              alt="Fashion collection"
-              className="mt-10 h-72 w-full object-cover"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* FEATURES */}
-      <section id="about" className="border-b border-zinc-100">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 divide-y divide-zinc-100 px-5 py-14 sm:grid-cols-3 sm:divide-x sm:divide-y-0 lg:px-8">
-          <div className="px-5 py-5 text-center">
-            <div className="mb-3 text-2xl">🚚</div>
-            <h3 className="text-sm font-semibold">จัดส่งรวดเร็ว</h3>
-            <p className="mt-2 text-xs text-zinc-400">
-              จัดส่งทั่วประเทศอย่างรวดเร็ว
-            </p>
-          </div>
-
-          <div className="px-5 py-5 text-center">
-            <div className="mb-3 text-2xl">↩</div>
-            <h3 className="text-sm font-semibold">เปลี่ยน/คืนสินค้า</h3>
-            <p className="mt-2 text-xs text-zinc-400">
-              เปลี่ยนสินค้าได้ภายใน 7 วัน
-            </p>
-          </div>
-
-          <div className="px-5 py-5 text-center">
-            <div className="mb-3 text-2xl">✓</div>
-            <h3 className="text-sm font-semibold">สินค้าคุณภาพ</h3>
-            <p className="mt-2 text-xs text-zinc-400">
-              คัดสรรสินค้าคุณภาพก่อนส่งถึงคุณ
-            </p>
-          </div>
-        </div>
       </section>
 
       {/* FOOTER */}
